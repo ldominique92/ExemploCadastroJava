@@ -1,5 +1,4 @@
 
-
 import java.sql.SQLException;
 import java.util.List;
 import java.io.*;
@@ -19,6 +18,8 @@ public class CRUD {
 			String opcao = "";
 			BufferedReader leitor = new BufferedReader(new InputStreamReader(System.in));
 
+			List<Disco> discos;
+			
 			do {
 				System.out.println();
 				System.out.println();
@@ -31,14 +32,12 @@ public class CRUD {
 
 				if (opcao.compareTo("L") == 0) {
 
-					List<Disco> discos = bancoDeDados.listarDiscos();
+					discos = bancoDeDados.listarDiscos();
 
 					if (discos.size() > 0) {
 						System.out.println();
 						for (Disco disco : discos) {
-							System.out.format("%-4d. %-20s - %-20s - %-4d  %-20s", disco.getId(), disco.getTitulo(),
-									disco.getArtista() != null ? disco.getArtista().getNome() : "", disco.getAno(),
-									disco.getGravadora() != null ? disco.getGravadora().getNome() : "");
+							exibirDisco(disco);
 						}
 					} else {
 						System.out.println("Nenhum disco cadastrado.");
@@ -55,5 +54,12 @@ public class CRUD {
 		} finally {
 			bancoDeDados.desconectar();
 		}
+	}
+
+	private static void exibirDisco(Disco disco) {
+		System.out.format("%-4d. %-20s - %-20s - %-4d  %-20s - %-4d views", disco.getId(),
+				disco.getTitulo(), disco.getArtista() != null ? disco.getArtista().getNome() : "",
+				disco.getAno(), disco.getGravadora() != null ? disco.getGravadora().getNome() : "",
+				disco.getVisualizacoes());
 	}
 }
