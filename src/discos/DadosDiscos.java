@@ -24,7 +24,7 @@ public class DadosDiscos {
 		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 				ResultSet.CONCUR_READ_ONLY);
 				ResultSet resultados = comando
-						.executeQuery("SELECT Id, Titulo, IdArtista, IdGravadora, Ano FROM Discos");) {
+						.executeQuery("SELECT Id, Titulo, IdArtista, IdGravadora, Ano, Visualizacoes FROM Discos");) {
 
 			List<Disco> discos = new ArrayList<Disco>();
 
@@ -35,11 +35,40 @@ public class DadosDiscos {
 				disco.setArtista(this.buscarArtista(resultados.getInt("IdArtista")));
 				disco.setGravadora(this.buscarGravadora(resultados.getInt("IdGravadora")));
 				disco.setAno(resultados.getInt("Ano"));
+				disco.setVisualizacoes(resultados.getInt("Visualizacoes"));
 
 				discos.add(disco);
 			}
 
 			return discos;
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
+
+	public Disco buscarDisco(int id) throws SQLException {
+		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+				ResultSet.CONCUR_UPDATABLE);
+				ResultSet resultados = comando.executeQuery(
+						"SELECT Id, Titulo, IdArtista, IdGravadora, Ano, Visualizacoes FROM Discos WHERE Id = "
+								+ id);) {
+			if (resultados.first()) {
+
+				Disco disco = new Disco();
+				disco.setId(resultados.getInt("Id"));
+				disco.setTitulo(resultados.getString("Titulo"));
+				disco.setArtista(this.buscarArtista(resultados.getInt("IdArtista")));
+				disco.setGravadora(this.buscarGravadora(resultados.getInt("IdGravadora")));
+				disco.setAno(resultados.getInt("Ano"));
+				disco.setVisualizacoes(resultados.getInt("Visualizacoes"));
+
+				resultados.updateInt("Visualizacoes", disco.getVisualizacoes() + 1);
+				resultados.updateRow();
+
+				return disco;
+			}
+
+			return null;
 		} catch (SQLException e) {
 			throw e;
 		}

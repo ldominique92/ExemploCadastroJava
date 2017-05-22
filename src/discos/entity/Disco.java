@@ -6,6 +6,7 @@ public class Disco {
 	private Artista artista;
 	private Gravadora gravadora;
 	private int ano;
+	private int visualizacoes;
 	
 	public int getId() {
 		return id;
@@ -46,4 +47,12 @@ public class Disco {
 	public void setGravadora(Gravadora gravadora) {
 		this.gravadora = gravadora;
 	}
+	
+	public int getVisualizacoes() {
+		return visualizacoes;
+	}
+	
+	public void setVisualizacoes(int visualizacoes) {
+		this.visualizacoes = visualizacoes;
+	} 
 }

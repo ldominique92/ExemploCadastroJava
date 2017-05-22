@@ -25,7 +25,9 @@ public class CRUD {
 				System.out.println();
 				System.out.println("**********Cadastro de discos**********");
 				System.out.println("Digite a opcao desejada:");
-				System.out.println("L - Listar");
+				System.out.println("L - Listar todos");
+				System.out.println("B - Buscar disco");
+				System.out.println("T - Top Five");
 				System.out.println("S - Sair");
 
 				opcao = leitor.readLine().trim();
@@ -42,6 +44,13 @@ public class CRUD {
 					} else {
 						System.out.println("Nenhum disco cadastrado.");
 					}
+				}
+				else if (opcao.compareTo("B") == 0)
+				{
+					System.out.print("Informe o código do disco:");
+					int id = Integer.parseInt(leitor.readLine().trim());
+					Disco disco = bancoDeDados.buscarDisco(id);
+					exibirDisco(disco);
 				}
 			} while (opcao.compareTo("S") != 0);
 
