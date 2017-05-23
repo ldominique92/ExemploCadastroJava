@@ -116,6 +116,41 @@ public class DadosDiscos {
 			throw e;
 		}
 	}
+	
+	public void modificarDisco(Disco disco) throws SQLException
+	{
+		PreparedStatement comando = null;
+		
+		try {
+			
+			if(disco.getArtista().getId() == 0)
+			{
+				this.salvarArtista(disco.getArtista());
+			}
+			
+			if(disco.getGravadora().getId() == 0)
+			{
+				this.salvarGravadora(disco.getGravadora());
+			}
+			
+			String sql = "UPDATE Discos SET Titulo = ?, IdArtista = ?, IdGravadora = ?, Ano = ? WHERE Id = ?";
+			comando = this.conexao.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			
+			comando.setString(1, disco.getTitulo());
+			comando.setInt(2, disco.getArtista().getId());
+			comando.setInt(3, disco.getGravadora().getId());
+			comando.setInt(4, disco.getAno());
+			comando.setInt(5, disco.getId());
+			
+			comando.executeUpdate();			
+				
+		} catch (SQLException e) {
+			throw e;
+		} finally {	
+			if(comando != null)
+				comando.close();
+		}
+	}
 
 	public Gravadora buscarGravadora(int id) throws SQLException {
 		PreparedStatement comando = null;

@@ -41,43 +41,20 @@ public class CRUD {
 				{
 					disco = new Disco();
 					
-					System.out.print("Informe o título do disco:");
-					disco.setTitulo(leitor.readLine().trim());
-					
-					System.out.print("Informe o código do artista (0 para inserir novo):");
-					aux = Integer.parseInt(leitor.readLine().trim());
-					
-					switch(aux)
-					{
-						case 0:
-							Artista artista = new Artista();
-							System.out.print("Informe o nome do artista:");
-							artista.setNome(leitor.readLine().trim());
-							disco.setArtista(artista);
-							break;
-						default:
-							disco.setArtista(bancoDeDados.buscarArtista(aux));
-					}
-					
-					System.out.print("Informe o ano de gravação do disco:");
-					disco.setAno(Integer.parseInt(leitor.readLine().trim()));
-					
-					System.out.print("Informe o código da gravadora (0 para inserir novo):");
-					aux = Integer.parseInt(leitor.readLine().trim());
-					
-					switch(aux)
-					{
-						case 0:
-							Gravadora gravadora = new Gravadora();
-							System.out.print("Informe o nome da gravadora:");
-							gravadora.setNome(leitor.readLine().trim());
-							disco.setGravadora(gravadora);
-							break;
-						default:
-							disco.setGravadora(bancoDeDados.buscarGravadora(aux));
-					}
+					lerDadosDisco(bancoDeDados, leitor, disco);
 					
 					bancoDeDados.salvarDisco(disco);
+				}
+				else if (opcao.compareTo("M") == 0)
+				{
+					System.out.print("Informe o código do disco:");
+					aux = Integer.parseInt(leitor.readLine().trim());
+					
+					disco = bancoDeDados.buscarDisco(aux);
+					
+					lerDadosDisco(bancoDeDados, leitor, disco);
+					
+					bancoDeDados.modificarDisco(disco);
 				}
 			} while (opcao.compareTo("S") != 0);
 
@@ -92,6 +69,46 @@ public class CRUD {
 		}
 	}
 
+	private static void lerDadosDisco(DadosDiscos bancoDeDados, BufferedReader leitor, Disco disco)
+			throws IOException, SQLException {
+		int aux;
+		System.out.print("Informe o título do disco:");
+		disco.setTitulo(leitor.readLine().trim());
+		
+		System.out.print("Informe o código do artista (0 para inserir novo):");
+		aux = Integer.parseInt(leitor.readLine().trim());
+		
+		switch(aux)
+		{
+			case 0:
+				Artista artista = new Artista();
+				System.out.print("Informe o nome do artista:");
+				artista.setNome(leitor.readLine().trim());
+				disco.setArtista(artista);
+				break;
+			default:
+				disco.setArtista(bancoDeDados.buscarArtista(aux));
+		}
+		
+		System.out.print("Informe o ano de gravação do disco:");
+		disco.setAno(Integer.parseInt(leitor.readLine().trim()));
+		
+		System.out.print("Informe o código da gravadora (0 para inserir novo):");
+		aux = Integer.parseInt(leitor.readLine().trim());
+		
+		switch(aux)
+		{
+			case 0:
+				Gravadora gravadora = new Gravadora();
+				System.out.print("Informe o nome da gravadora:");
+				gravadora.setNome(leitor.readLine().trim());
+				disco.setGravadora(gravadora);
+				break;
+			default:
+				disco.setGravadora(bancoDeDados.buscarGravadora(aux));
+		}
+	}
+
 	private static void exibirMenuDiscos() {
 		System.out.println();
 		System.out.println();
@@ -100,7 +117,7 @@ public class CRUD {
 		System.out.println("L - Listar todos");
 		System.out.println("B - Buscar disco");
 		System.out.println("N - Novo disco");
-		System.out.println("T - Top Five");
+		System.out.println("M - Modificar disco");
 		System.out.println("S - Sair");
 	}
 
