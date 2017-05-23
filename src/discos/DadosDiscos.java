@@ -47,11 +47,16 @@ public class DadosDiscos {
 	}
 
 	public Disco buscarDisco(int id) throws SQLException {
-		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-				ResultSet.CONCUR_UPDATABLE);
-				ResultSet resultados = comando.executeQuery(
-						"SELECT Id, Titulo, IdArtista, IdGravadora, Ano, Visualizacoes FROM Discos WHERE Id = "
-								+ id);) {
+		PreparedStatement comando = null;
+		ResultSet resultados = null;
+		
+		try {
+			
+			String query = "SELECT Id, Titulo, IdArtista, IdGravadora, Ano, Visualizacoes FROM Discos WHERE Id = ?";
+			comando = this.conexao.prepareStatement(query, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			comando.setInt(1, id);
+			
+			resultados = comando.executeQuery();
 			if (resultados.first()) {
 
 				Disco disco = new Disco();
@@ -71,6 +76,12 @@ public class DadosDiscos {
 			return null;
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			if(resultados != null)
+				resultados.close();
+			
+			if(comando != null)
+				comando.close();
 		}
 	}
 	
@@ -107,9 +118,15 @@ public class DadosDiscos {
 	}
 
 	public Gravadora buscarGravadora(int id) throws SQLException {
-		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-				ResultSet.CONCUR_READ_ONLY);
-				ResultSet resultados = comando.executeQuery("SELECT Id, Nome FROM Gravadoras WHERE Id = " + id);) {
+		PreparedStatement comando = null;
+		ResultSet resultados = null;
+		
+		try {
+			String query = "SELECT Id, Nome FROM Gravadoras WHERE Id = ?";
+			comando = this.conexao.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			comando.setInt(1, id);
+			
+			resultados = comando.executeQuery();
 			if (resultados.first()) {
 				Gravadora gravadora = new Gravadora();
 				gravadora.setId(resultados.getInt("Id"));
@@ -121,6 +138,12 @@ public class DadosDiscos {
 			return null;
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			if(resultados != null)
+				resultados.close();
+			
+			if(comando != null)
+				comando.close();
 		}
 	}
 	
@@ -144,9 +167,15 @@ public class DadosDiscos {
 	}
 	
 	public Artista buscarArtista(int id) throws SQLException {
-		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
-				ResultSet.CONCUR_READ_ONLY);
-				ResultSet resultados = comando.executeQuery("SELECT Id, Nome FROM Artistas WHERE Id = " + id);) {
+		PreparedStatement comando = null;
+		ResultSet resultados = null;
+		
+		try {
+			String query = "SELECT Id, Nome FROM Artistas WHERE Id = ?";
+			comando = this.conexao.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+			comando.setInt(1, id);
+			
+			resultados = comando.executeQuery();
 			if (resultados.first()) {
 				Artista artista = new Artista();
 				artista.setId(resultados.getInt("Id"));
@@ -159,6 +188,12 @@ public class DadosDiscos {
 
 		} catch (SQLException e) {
 			throw e;
+		} finally {
+			if(resultados != null)
+				resultados.close();
+			
+			if(comando != null)
+				comando.close();
 		}
 	}
 	
