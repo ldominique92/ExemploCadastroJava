@@ -85,35 +85,36 @@ public class DadosDiscos {
 		}
 	}
 	
-	public void salvarDisco(Disco disco) throws SQLException
+	public void salvarDiscos(List<Disco> discos) throws SQLException
 	{
-		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
-				ResultSet.CONCUR_UPDATABLE);
-				ResultSet resultados = comando.executeQuery(
-						"SELECT Titulo, IdArtista, IdGravadora, Ano, Visualizacoes FROM Discos");) {
+		CallableStatement comando = null;
+		
+		try {
 			
-				if(disco.getArtista().getId() == 0)
-				{
-					this.salvarArtista(disco.getArtista());
-				}
-				
-				if(disco.getGravadora().getId() == 0)
-				{
-					this.salvarGravadora(disco.getGravadora());
-				}
+			comando = conexao.prepareCall("{ call SP_INSERT_DISCOS(?,?,?,?,?,?) }");
 			
-				resultados.moveToInsertRow();
-				resultados.updateString("Titulo", disco.getTitulo());
-				resultados.updateInt("IdArtista", disco.getArtista().getId());
-				resultados.updateInt("IdGravadora", disco.getGravadora().getId());
-				resultados.updateInt("Ano", disco.getAno());
+			for(Disco disco : discos)
+			{
+				comando.setString(1, disco.getTitulo());
+				
+				comando.setInt(2, disco.getArtista().getId());
+				comando.setString(3, disco.getArtista().getNome());
+				
+				comando.setInt(4, disco.getGravadora().getId());
+				comando.setString(5, disco.getGravadora().getNome());
+				
+				comando.setInt(6, disco.getAno());
+				
+				comando.addBatch();
+			}
 			
-				resultados.insertRow();
-				
-				
-				
-		} catch (SQLException e) {
+			comando.executeBatch();
+		}
+		catch (SQLException e) {
 			throw e;
+		} finally {	
+			if(comando != null)
+				comando.close();
 		}
 	}
 	
@@ -270,7 +271,7 @@ public class DadosDiscos {
 			throw e;
 		}
 	}
-
+	
 	public void desconectar() {
 		try {
 			if (this.conexao != null) {

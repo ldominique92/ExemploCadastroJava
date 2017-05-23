@@ -1,5 +1,6 @@
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.io.*;
 
@@ -39,11 +40,20 @@ public class CRUD {
 				}
 				else if (opcao.compareTo("N") == 0)
 				{
-					disco = new Disco();
+					List<Disco> discos = new ArrayList<Disco>();
 					
-					lerDadosDisco(bancoDeDados, leitor, disco);
+					do
+					{
+						disco = new Disco();
+						lerDadosDisco(bancoDeDados, leitor, disco);
+						discos.add(disco);
+						
+						System.out.print("Deseja incluir mais um disco (sim/nao)? ");
+						opcao = leitor.readLine().trim();
+					}
+					while(opcao.compareTo("sim") == 0);
 					
-					bancoDeDados.salvarDisco(disco);
+					bancoDeDados.salvarDiscos(discos);
 				}
 				else if (opcao.compareTo("M") == 0)
 				{
