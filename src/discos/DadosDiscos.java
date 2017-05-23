@@ -108,6 +108,11 @@ public class DadosDiscos {
 				comando.addBatch();
 			}
 			
+			// comando.registerOutParameter(2, Types.INTEGER);
+			// comando.registerOutParameter(4, Types.INTEGER);
+			// disco.getArtista().setId(comando.getInt(2);
+			// disco.getGravadora().setId(comando.getInt(4);
+			
 			comando.executeBatch();
 		}
 		catch (SQLException e) {
@@ -170,6 +175,40 @@ public class DadosDiscos {
 		} finally {	
 			if(comando != null)
 				comando.close();
+		}
+	}
+	
+	public List<Disco> filtrarDiscos(int idArtista, int idGravadora) throws SQLException {
+		
+		ResultSet resultados = null;
+		
+		try (CallableStatement comando = conexao.prepareCall("{ call SP_GETDISCOS_BY_FILTER(?,?) }");)
+		{	
+			comando.setInt(1, idArtista);
+			comando.setInt(2, idGravadora);
+			
+			resultados = comando.executeQuery();
+
+			List<Disco> discos = new ArrayList<Disco>();
+
+			while ((resultados.next())) {
+				Disco disco = new Disco();
+				disco.setId(resultados.getInt("Id"));
+				disco.setTitulo(resultados.getString("Titulo"));
+				disco.setArtista(this.buscarArtista(resultados.getInt("IdArtista")));
+				disco.setGravadora(this.buscarGravadora(resultados.getInt("IdGravadora")));
+				disco.setAno(resultados.getInt("Ano"));
+				disco.setVisualizacoes(resultados.getInt("Visualizacoes"));
+
+				discos.add(disco);
+			}
+
+			return discos;
+		} catch (SQLException e) {
+			throw e;
+		} finally {	
+			if(resultados != null)
+				resultados.close();
 		}
 	}
 

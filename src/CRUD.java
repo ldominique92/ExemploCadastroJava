@@ -29,7 +29,7 @@ public class CRUD {
 
 				if (opcao.compareTo("L") == 0) {
 
-					listarDiscos(bancoDeDados);
+					listarDiscos(bancoDeDados.listarDiscos());
 				}
 				else if (opcao.compareTo("B") == 0)
 				{
@@ -72,6 +72,13 @@ public class CRUD {
 					aux = Integer.parseInt(leitor.readLine().trim());
 					
 					bancoDeDados.deletarDisco(aux);
+				}
+				else if (opcao.compareTo("A") == 0)
+				{
+					System.out.print("Informe o código do artista:");
+					aux = Integer.parseInt(leitor.readLine().trim());
+					
+					listarDiscos(bancoDeDados.filtrarDiscos(aux, 0));
 				}
 				
 			} while (opcao.compareTo("S") != 0);
@@ -137,6 +144,7 @@ public class CRUD {
 		System.out.println("N - Novo disco");
 		System.out.println("M - Modificar disco");
 		System.out.println("D - Deletar disco");
+		System.out.println("A - Discos de um artista");
 		System.out.println("S - Sair");
 	}
 
@@ -145,9 +153,7 @@ public class CRUD {
 		exibirDisco(disco);
 	}
 
-	private static void listarDiscos(DadosDiscos bancoDeDados) throws SQLException {
-		List<Disco> discos = bancoDeDados.listarDiscos();
-
+	private static void listarDiscos(List<Disco> discos) {
 		if (discos.size() > 0) {
 			System.out.println();
 			for (Disco d : discos) {
@@ -159,8 +165,8 @@ public class CRUD {
 	}
 
 	private static void exibirDisco(Disco disco) {
-		System.out.format("%-4d. %-20s - %-20s - %-4d  %-20s - %-4d views", disco.getId(),
-				disco.getTitulo(), disco.getArtista() != null ? disco.getArtista().getNome() : "",
+		System.out.format("%-4d. %-20s - %-4d. %-20s - %-4d  %-20s - %-4d views", disco.getId(),
+				disco.getTitulo(), disco.getArtista() != null ? disco.getArtista().getId() : "", disco.getArtista() != null ? disco.getArtista().getNome() : "",
 				disco.getAno(), disco.getGravadora() != null ? disco.getGravadora().getNome() : "",
 				disco.getVisualizacoes());
 		System.out.println();
