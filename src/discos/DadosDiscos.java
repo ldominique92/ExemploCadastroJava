@@ -73,6 +73,38 @@ public class DadosDiscos {
 			throw e;
 		}
 	}
+	
+	public void salvarDisco(Disco disco) throws SQLException
+	{
+		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+				ResultSet.CONCUR_UPDATABLE);
+				ResultSet resultados = comando.executeQuery(
+						"SELECT Titulo, IdArtista, IdGravadora, Ano, Visualizacoes FROM Discos");) {
+			
+				if(disco.getArtista().getId() == 0)
+				{
+					this.salvarArtista(disco.getArtista());
+				}
+				
+				if(disco.getGravadora().getId() == 0)
+				{
+					this.salvarGravadora(disco.getGravadora());
+				}
+			
+				resultados.moveToInsertRow();
+				resultados.updateString("Titulo", disco.getTitulo());
+				resultados.updateInt("IdArtista", disco.getArtista().getId());
+				resultados.updateInt("IdGravadora", disco.getGravadora().getId());
+				resultados.updateInt("Ano", disco.getAno());
+			
+				resultados.insertRow();
+				
+				
+				
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
 
 	public Gravadora buscarGravadora(int id) throws SQLException {
 		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
@@ -91,7 +123,26 @@ public class DadosDiscos {
 			throw e;
 		}
 	}
-
+	
+	public void salvarGravadora(Gravadora gravadora) throws SQLException
+	{
+		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+				ResultSet.CONCUR_UPDATABLE);
+				ResultSet resultados = comando.executeQuery(
+						"SELECT Id, Nome FROM Gravadoras");) {
+			
+				resultados.moveToInsertRow();
+				resultados.updateString("Nome", gravadora.getNome());
+				resultados.insertRow();
+				
+				resultados.last();
+				gravadora.setId(resultados.getInt("Id"));
+				
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
+	
 	public Artista buscarArtista(int id) throws SQLException {
 		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE,
 				ResultSet.CONCUR_READ_ONLY);
@@ -106,6 +157,25 @@ public class DadosDiscos {
 
 			return null;
 
+		} catch (SQLException e) {
+			throw e;
+		}
+	}
+	
+	public void salvarArtista(Artista artista) throws SQLException
+	{
+		try (Statement comando = this.conexao.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+				ResultSet.CONCUR_UPDATABLE);
+				ResultSet resultados = comando.executeQuery(
+						"SELECT Id, Nome FROM Artistas");) {
+			
+				resultados.moveToInsertRow();
+				resultados.updateString("Nome", artista.getNome());
+				resultados.insertRow();
+				
+				resultados.last();
+				artista.setId(resultados.getInt("Id"));
+				
 		} catch (SQLException e) {
 			throw e;
 		}

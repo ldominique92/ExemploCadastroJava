@@ -28,8 +28,8 @@ public class Disco {
 		return artista;
 	}
 	
-	public void setArtista(Artista idArtista) {
-		this.artista = idArtista;
+	public void setArtista(Artista artista) {
+		this.artista = artista;
 	}
 	
 	public int getAno() {
