@@ -56,6 +56,14 @@ public class CRUD {
 					
 					bancoDeDados.modificarDisco(disco);
 				}
+				else if (opcao.compareTo("D") == 0)
+				{
+					System.out.print("Informe o código do disco:");
+					aux = Integer.parseInt(leitor.readLine().trim());
+					
+					bancoDeDados.deletarDisco(aux);
+				}
+				
 			} while (opcao.compareTo("S") != 0);
 
 		} catch (SQLException e) {
@@ -118,6 +126,7 @@ public class CRUD {
 		System.out.println("B - Buscar disco");
 		System.out.println("N - Novo disco");
 		System.out.println("M - Modificar disco");
+		System.out.println("D - Deletar disco");
 		System.out.println("S - Sair");
 	}
 

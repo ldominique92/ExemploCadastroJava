@@ -151,6 +151,26 @@ public class DadosDiscos {
 				comando.close();
 		}
 	}
+	
+	public void deletarDisco(int id) throws SQLException
+	{
+		PreparedStatement comando = null;
+		
+		try {
+			
+			String sql = "DELETE FROM Discos WHERE Id = ?";
+			comando = this.conexao.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+			comando.setInt(1, id);
+			
+			comando.executeUpdate();			
+				
+		} catch (SQLException e) {
+			throw e;
+		} finally {	
+			if(comando != null)
+				comando.close();
+		}
+	}
 
 	public Gravadora buscarGravadora(int id) throws SQLException {
 		PreparedStatement comando = null;
