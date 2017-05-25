@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean 
+		name="albumRepository"
+		class="com.albums.repository.HibernateAlbumRepositoryImpl"></bean>
+		
+	<bean 
+		name="artistRepository"
+		class="com.albums.repository.HibernateArtistRepositoryImpl"></bean>
+		
+	<bean 
+		name="labelRepository"
+		class="com.albums.repository.HibernateLabelRepositoryImpl"></bean>
+		
+	<bean name="albumService" class="com.albums.service.AlbumServiceImpl"
+	autowire="constructor">
+		<!-- <property
+			name="albumRepository" ref="albumRepository"></property> -->
+		<!-- <constructor-arg index="0" ref="albumRepository"></constructor-arg>-->	
+	</bean>
+	
+	<bean name="artistService" class="com.albums.service.ArtistServiceImpl"
+		autowire="constructor">
+	</bean>
+	
+	<bean name="labelService" class="com.albums.service.LabelServiceImpl"
+		autowire="constructor">
+	</bean>
+</beans>
